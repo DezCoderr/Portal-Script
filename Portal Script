@@ -1,0 +1,47 @@
+local teleportPart = script.Parent
+local destinationPart = workspace.Destination
+
+local function getBehindPosition(part)
+	local partCFrame = part.CFrame
+	local backVector = -partCFrame.LookVector
+	local positionBehind = partCFrame.Position + backVector * 10
+	local rotation = partCFrame.LookVector * -1
+	return CFrame.new(positionBehind, positionBehind + rotation)
+end
+
+
+local debounce = false
+teleportPart.Touched:Connect(function(hit)
+	if debounce then return end
+	debounce = true
+
+
+	local character = hit.Parent
+	local humanoid = character:FindFirstChild("Humanoid")
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	if humanoid and rootPart then
+
+		local newCFrame = getBehindPosition(destinationPart)
+		rootPart.CFrame = newCFrame
+	end
+
+	wait(0.5)
+	debounce = false
+end)
+
+destinationPart.Touched:Connect(function(hit)
+	if debounce then return end
+	debounce = true
+
+	local character = hit.Parent
+	local humanoid = character:FindFirstChild("Humanoid")
+	local rootPart = character:FindFirstChild("HumanoidRootPart")
+	if humanoid and rootPart then
+
+		local newCFrame = getBehindPosition(teleportPart)
+		rootPart.CFrame = newCFrame
+	end
+
+	wait(0.5)
+	debounce = false
+end)
